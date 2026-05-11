@@ -13,6 +13,8 @@ interface Project {
   featured: boolean
 }
 
+export const revalidate = 60
+
 async function getProjects(): Promise<Project[]> {
   return client.fetch(
     `*[_type == "project"] | order(year desc) {

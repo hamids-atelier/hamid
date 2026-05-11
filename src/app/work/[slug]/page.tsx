@@ -17,6 +17,8 @@ interface Project {
   url: string
 }
 
+export const revalidate = 60
+
 async function getProject(slug: string): Promise<Project | null> {
   return client.fetch(
     `*[_type == "project" && slug.current == $slug][0] {

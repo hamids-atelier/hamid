@@ -13,6 +13,8 @@ interface Post {
   author?: { name?: string; image?: object }
 }
 
+export const revalidate = 60
+
 async function getPosts(): Promise<Post[]> {
   return client.fetch(
     `*[_type == "post"] | order(publishedAt desc) {

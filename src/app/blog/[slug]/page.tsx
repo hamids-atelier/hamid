@@ -19,6 +19,8 @@ interface Post {
   author?: { name?: string; bio?: string; image?: object }
 }
 
+export const revalidate = 60
+
 function readTime(body: Post['body']): number {
   if (!body?.length) return 1
   const text = body
