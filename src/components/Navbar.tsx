@@ -13,7 +13,6 @@ interface NavbarProps {
 
 const NAV_LINKS = [
   { label: 'Blog', href: '/blog' },
-  { label: 'Work', href: '/work' },
 ]
 
 export default function Navbar({ theme = 'light' }: NavbarProps) {
