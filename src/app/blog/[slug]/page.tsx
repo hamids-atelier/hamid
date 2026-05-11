@@ -2,6 +2,7 @@ import { client, urlFor } from '@/lib/sanity'
 import PortableTextRenderer from '@/components/PortableTextRenderer'
 import PostActions from '@/components/PostActions'
 import Image from 'next/image'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import AuthorBio from '@/components/AuthorBio'
@@ -45,6 +46,12 @@ async function getPost(slug: string): Promise<Post | null> {
   )
 }
 
+async function getAllPosts(): Promise<{ title: string; slug: { current: string } }[]> {
+  return client.fetch(
+    `*[_type == "post"] | order(publishedAt desc) { title, slug }`
+  )
+}
+
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
@@ -85,7 +92,7 @@ export async function generateStaticParams() {
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = await getPost(slug)
+  const [post, allPosts] = await Promise.all([getPost(slug), getAllPosts()])
   if (!post) notFound()
 
   const mins = readTime(post.body)
@@ -126,7 +133,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="w-full border-t border-gray-100" />
 
           {/* Meta */}
-          <div className="flex flex-col gap-3 text-xs text-gray-400">
+          <div className="flex flex-col gap-3 text-[0.875rem] text-black">
             {post.publishedAt && (
               <div className="flex items-center gap-2">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -143,14 +150,26 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
           </div>
 
-          {/* Tags */}
-          {post.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {post.tags.map(tag => (
-                <span key={tag} className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                  {tag}
-                </span>
-              ))}
+          {/* Blog posts list */}
+          {allPosts.length > 0 && (
+            <div className="flex flex-col gap-1">
+              <p className="text-[0.75rem] font-semibold uppercase tracking-widest text-gray-400 mb-2">Blog Posts</p>
+              {allPosts.map(p => {
+                const isCurrent = p.slug.current === slug
+                return isCurrent ? (
+                  <span key={p.slug.current} className="text-[0.875rem] text-gray-300 leading-snug py-1 cursor-default line-clamp-2">
+                    {p.title}
+                  </span>
+                ) : (
+                  <Link
+                    key={p.slug.current}
+                    href={`/blog/${p.slug.current}`}
+                    className="text-[0.875rem] text-black leading-snug py-1 hover:underline line-clamp-2"
+                  >
+                    {p.title}
+                  </Link>
+                )
+              })}
             </div>
           )}
         </aside>
@@ -195,7 +214,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {/* Excerpt */}
           {post.excerpt && (
-            <p className="text-xl text-gray-400 leading-relaxed mb-8">{post.excerpt}</p>
+            <p className="text-black font-medium leading-relaxed mb-8 text-[1.3rem]">{post.excerpt}</p>
           )}
 
           {/* Actions */}
