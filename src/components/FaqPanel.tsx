@@ -50,8 +50,12 @@ const FAQS = [
   },
 ]
 
-export default function FaqPanel() {
-  const [open, setOpen] = useState(false)
+interface FaqPanelProps {
+  open: boolean
+  onClose: () => void
+}
+
+export default function FaqPanel({ open, onClose }: FaqPanelProps) {
   const [mounted, setMounted] = useState(false)
   const [active, setActive] = useState<number | null>(null)
 
@@ -64,25 +68,24 @@ export default function FaqPanel() {
   }, [open])
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [])
+  }, [onClose])
 
-  const toggle = (index: number) => {
-    setActive(prev => (prev === index ? null : index))
-  }
+  const toggle = (index: number) => setActive(prev => (prev === index ? null : index))
 
-  const panel = (
+  if (!mounted) return null
+
+  return createPortal(
     <>
       <div
         aria-hidden="true"
-        onClick={() => setOpen(false)}
+        onClick={onClose}
         className={`fixed inset-0 z-40 transition-all duration-500 ${
           open ? 'visible bg-black/60 backdrop-blur-sm' : 'invisible bg-transparent pointer-events-none'
         }`}
       />
-
       <aside
         role="dialog"
         aria-modal="true"
@@ -93,11 +96,9 @@ export default function FaqPanel() {
       >
         <div className="px-10 pt-10 pb-16">
           <div className="flex items-start justify-between mb-10">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-              FAQs
-            </h2>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">FAQs</h2>
             <button
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               aria-label="Close"
               className="mt-1 ml-6 shrink-0 w-10 h-10 bg-[#E8432D] hover:bg-[#d03a26] text-white rounded-full flex items-center justify-center transition-colors duration-150"
             >
@@ -106,7 +107,6 @@ export default function FaqPanel() {
               </svg>
             </button>
           </div>
-
           <div className="divide-y divide-gray-200">
             {FAQS.map((faq, i) => (
               <div key={i}>
@@ -130,34 +130,15 @@ export default function FaqPanel() {
                     )}
                   </span>
                 </button>
-                <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    active === i ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
-                >
-                  <p className="pb-5 text-gray-800 text-md leading-relaxed">
-                    {faq.a}
-                  </p>
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${active === i ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <p className="pb-5 text-gray-800 text-md leading-relaxed">{faq.a}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </aside>
-    </>
-  )
-
-  return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        title="FAQs"
-        aria-label="FAQs"
-        className="bg-white hover:bg-black active:scale-110 text-black hover:text-white text-sm font-bold px-3 sm:px-6 py-2.5 rounded border-2 border-black transition-all duration-200 tracking-wide whitespace-nowrap"
-      >
-        ?
-      </button>
-      {mounted && createPortal(panel, document.body)}
-    </>
+    </>,
+    document.body
   )
 }

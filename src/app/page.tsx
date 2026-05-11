@@ -1,7 +1,5 @@
-import Image from 'next/image'
 import HeroVideo from '@/components/HeroVideo'
-import ContactPanel from '@/components/ContactPanel'
-import FaqPanel from '@/components/FaqPanel'
+import Navbar from '@/components/Navbar'
 import ChatbotLoader from '@/components/ChatbotLoader'
 
 export default function Home() {
@@ -18,21 +16,7 @@ export default function Home() {
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/10 to-black/40 pointer-events-none" />
 
-        {/* Navbar */}
-        <nav aria-label="Main navigation" className="relative z-20 flex items-center justify-between px-8 lg:px-14 pt-7">
-          <Image
-            src="/logo.svg"
-            alt="HAMID"
-            width={120}
-            height={28}
-            className="brightness-0 invert h-7 w-auto"
-            priority
-          />
-          <div className="flex items-center gap-2">
-            <ContactPanel />
-            <FaqPanel />
-          </div>
-        </nav>
+        <Navbar theme="light" />
 
         {/* Video spacer — pushes intro below, ensures video is visible */}
         <div className="relative z-10 flex-1" style={{ minHeight: '400px' }} />
