@@ -4,6 +4,7 @@ import PostActions from '@/components/PostActions'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import AuthorBio from '@/components/AuthorBio'
 
 interface Post {
   _id: string
@@ -117,9 +118,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <p className="font-semibold text-gray-900 text-sm leading-snug">{post.author.name}</p>
             )}
 
-            {post.author?.bio && (
-              <p className="text-xs text-gray-400 leading-relaxed">{post.author.bio}</p>
-            )}
+            {post.author?.bio && <AuthorBio bio={post.author.bio} />}
           </div>
 
           <div className="w-full border-t border-gray-100" />
