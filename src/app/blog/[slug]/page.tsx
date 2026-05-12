@@ -40,7 +40,7 @@ async function getPost(slug: string): Promise<Post | null> {
   return client.fetch(
     `*[_type == "post" && slug.current == $slug][0] {
       _id, title, slug, excerpt, coverImage, body, publishedAt, tags,
-      author { name, bio, image }
+      author-> { name, bio, image }
     }`,
     { slug }
   )

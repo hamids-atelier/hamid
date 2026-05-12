@@ -55,17 +55,8 @@ export const post = defineType({
     defineField({
       name: 'author',
       title: 'Author',
-      type: 'object',
-      fields: [
-        { name: 'name', title: 'Name', type: 'string' },
-        { name: 'bio', title: 'Short Bio', type: 'text', rows: 2 },
-        {
-          name: 'image',
-          title: 'Photo',
-          type: 'image',
-          options: { hotspot: true },
-        },
-      ],
+      type: 'reference',
+      to: [{ type: 'author' }],
     }),
     defineField({
       name: 'publishedAt',

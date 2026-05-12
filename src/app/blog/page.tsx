@@ -19,7 +19,7 @@ async function getPosts(): Promise<Post[]> {
   return client.fetch(
     `*[_type == "post"] | order(publishedAt desc) {
       _id, title, slug, excerpt, coverImage, publishedAt, tags,
-      author { name, image }
+      author-> { name, image }
     }`
   )
 }
