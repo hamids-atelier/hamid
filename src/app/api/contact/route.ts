@@ -76,7 +76,7 @@ export async function POST(request: Request) {
         <tr>
           <td style="background:#111;padding:32px 40px;">
             <p style="margin:0;color:#fff;font-size:22px;font-weight:900;letter-spacing:-0.5px;">HAMID</p>
-            <p style="margin:6px 0 0;color:#888;font-size:13px;">New client inquiry from hamidsharifi.com</p>
+            <p style="margin:6px 0 0;color:#888;font-size:13px;">New client inquiry from <a href="https://hamidsharifi.com" style="color:#888;text-decoration:none;">hamidsharifi.com</a></p>
           </td>
         </tr>
 
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
         <!-- Footer -->
         <tr>
           <td style="background:#f9fafb;padding:18px 40px;border-top:1px solid #e5e7eb;">
-            <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">Sent from <strong>hamidsharifi.com</strong> · <a href="mailto:connect@hamidsharifi.com" style="color:#9ca3af;">connect@hamidsharifi.com</a></p>
+            <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">Sent from <strong>hamidsharifi.com</strong> · <a href="mailto:connect@hamidsharifi.com" style="color:#9ca3af;text-decoration:none;">connect@hamidsharifi.com</a></p>
           </td>
         </tr>
 
@@ -147,7 +147,7 @@ export async function POST(request: Request) {
         <tr>
           <td style="background:#111;padding:32px 40px;">
             <p style="margin:0;color:#fff;font-size:22px;font-weight:900;letter-spacing:-0.5px;">HAMID</p>
-            <p style="margin:6px 0 0;color:#888;font-size:13px;">hamidsharifi.com · connect@hamidsharifi.com</p>
+            <p style="margin:6px 0 0;color:#888;font-size:13px;"><a href="https://hamidsharifi.com" style="color:#888;text-decoration:none;">hamidsharifi.com</a> · <a href="mailto:connect@hamidsharifi.com" style="color:#888;text-decoration:none;">connect@hamidsharifi.com</a></p>
           </td>
         </tr>
 
@@ -206,7 +206,7 @@ export async function POST(request: Request) {
         <tr>
           <td style="background:#f9fafb;padding:18px 40px;border-top:1px solid #e5e7eb;">
             <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">
-              You're receiving this because you submitted a form at <strong>hamidsharifi.com</strong>.<br/>
+              You're receiving this because you submitted a form at <a href="https://hamidsharifi.com" style="color:#9ca3af;text-decoration:none;"><strong>hamidsharifi.com</strong></a>.<br/>
               If this wasn't you, please ignore this email.
             </p>
           </td>
