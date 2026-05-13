@@ -27,7 +27,7 @@ export default async function BlogPage() {
   const posts = await getPosts()
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-14">
+    <main className="max-w-5xl mx-auto px-6 py-14">
       <h1 className="text-3xl font-bold mb-10 tracking-tight">Blog</h1>
 
       {posts.length === 0 ? (

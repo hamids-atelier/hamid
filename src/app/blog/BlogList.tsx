@@ -275,7 +275,7 @@ export default function BlogList({ posts }: { posts: Post[] }) {
                   </h2>
 
                   {post.excerpt && (
-                    <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">
+                    <p className="text-black font-medium text-[1.125rem] leading-relaxed line-clamp-2">
                       {post.excerpt}
                     </p>
                   )}
