@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
-import { RecaptchaEnterpriseServiceClient } from '@google-cloud/recaptcha-enterprise'
 
-const RECAPTCHA_SITE_KEY = '6LdPbs0sAAAAAHd1MFgSGJn9uECTCyiXaetbrnyW'
-const RECAPTCHA_PROJECT_ID = 'recaptcha-enterp-1709321842821'
 const TO_EMAIL = 'hamid54888@gmail.com'
 const FROM_EMAIL = 'connect@hamidsharifi.com'
 const FROM_NAME = "Hamid's Atelier"
@@ -21,39 +18,30 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { token, service, firstName, lastName, email, howFound } = body
 
-    /* ── 1. Verify reCAPTCHA ── */
+    /* ── 1. Verify reCAPTCHA v3 ── */
     if (!token) {
       return NextResponse.json({ error: 'reCAPTCHA token missing.' }, { status: 400 })
     }
 
-    const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON ?? '{}')
-    const client = new RecaptchaEnterpriseServiceClient({ credentials })
-    const projectPath = client.projectPath(RECAPTCHA_PROJECT_ID)
-
-    const [response] = await client.createAssessment({
-      assessment: {
-        event: { token, siteKey: RECAPTCHA_SITE_KEY },
-      },
-      parent: projectPath,
+    const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        secret: process.env.RECAPTCHA_SECRET_KEY ?? '',
+        response: token,
+      }),
     })
 
-    await client.close()
+    const verifyData = await verifyRes.json()
 
-    if (!response.tokenProperties?.valid) {
+    if (!verifyData.success) {
       return NextResponse.json(
         { error: 'reCAPTCHA verification failed. Please try again.' },
         { status: 400 }
       )
     }
 
-    if (response.tokenProperties.action !== 'CONTACT') {
-      return NextResponse.json(
-        { error: 'reCAPTCHA action mismatch.' },
-        { status: 400 }
-      )
-    }
-
-    if ((response.riskAnalysis?.score ?? 0) < 0.5) {
+    if ((verifyData.score ?? 0) < 0.5) {
       return NextResponse.json(
         { error: 'reCAPTCHA score too low. Please try again.' },
         { status: 400 }
@@ -64,7 +52,7 @@ export async function POST(request: Request) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER,   // connect@hamidsharifi.com
+        user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
       },
     })
@@ -232,7 +220,6 @@ export async function POST(request: Request) {
 
     /* ── 3. Send both emails in parallel ── */
     await Promise.all([
-      // Notification → Hamid
       transporter.sendMail({
         from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
         to: TO_EMAIL,
@@ -240,7 +227,6 @@ export async function POST(request: Request) {
         subject: `New inquiry: ${serviceLabel} — ${fullName}`,
         html: notificationHtml,
       }),
-      // Auto-reply → client
       transporter.sendMail({
         from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
         to: email,

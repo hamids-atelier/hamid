@@ -228,9 +228,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
         <Script
-          id="recaptcha-enterprise"
+          id="recaptcha-v3"
           strategy="afterInteractive"
-          src="https://www.google.com/recaptcha/enterprise.js?render=6LdPbs0sAAAAAHd1MFgSGJn9uECTCyiXaetbrnyW"
+          src="https://www.google.com/recaptcha/api.js?render=6Lc-TecsAAAAAAlJ1nVabKrGtdQTw3DkZZlmSled"
         />
         <Script
           id="google-tag-manager"

@@ -6,15 +6,13 @@ import { createPortal } from 'react-dom'
 declare global {
   interface Window {
     grecaptcha: {
-      enterprise: {
-        ready: (cb: () => void) => void
-        execute: (siteKey: string, options: { action: string }) => Promise<string>
-      }
+      ready: (cb: () => void) => void
+      execute: (siteKey: string, options: { action: string }) => Promise<string>
     }
   }
 }
 
-const RECAPTCHA_SITE_KEY = '6LdPbs0sAAAAAHd1MFgSGJn9uECTCyiXaetbrnyW'
+const RECAPTCHA_SITE_KEY = '6Lc-TecsAAAAAAlJ1nVabKrGtdQTw3DkZZlmSled'
 
 export default function ContactPanel({ theme = 'light' }: { theme?: 'light' | 'dark' }) {
   const [formOpen, setFormOpen] = useState(false)
@@ -54,8 +52,8 @@ export default function ContactPanel({ theme = 'light' }: { theme?: 'light' | 'd
     setLoading(true)
     const form = e.currentTarget
     try {
-      await new Promise<void>((resolve) => window.grecaptcha.enterprise.ready(resolve))
-      const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, { action: 'CONTACT' })
+      await new Promise<void>((resolve) => window.grecaptcha.ready(resolve))
+      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'CONTACT' })
       const data = {
         token,
         service: (form.elements.namedItem('service') as HTMLSelectElement).value,
