@@ -16,7 +16,16 @@ const SERVICE_LABELS: Record<string, string> = {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { token, service, firstName, lastName, email, howFound } = body
+    const { token, service, firstName, lastName, email, howFound, pageUrl } = body
+
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+            || request.headers.get('x-real-ip')
+            || 'Unknown'
+
+    const city    = decodeURIComponent(request.headers.get('x-vercel-ip-city') ?? '')
+    const region  = request.headers.get('x-vercel-ip-country-region') ?? ''
+    const country = request.headers.get('x-vercel-ip-country') ?? ''
+    const location = [city, region, country].filter(Boolean).join(', ') || 'Unknown'
 
     /* ── 1. Verify reCAPTCHA v3 ── */
     if (!token) {
@@ -103,8 +112,20 @@ export async function POST(request: Request) {
                 <td style="padding:14px 18px;font-size:14px;color:#111;border-bottom:1px solid #f0f0f0;"><a href="mailto:${email ?? ''}" style="color:#E8432D;text-decoration:none;">${email || '—'}</a></td>
               </tr>
               <tr style="background:#fafafa;">
-                <td style="padding:14px 18px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;width:36%;">How they found you</td>
-                <td style="padding:14px 18px;font-size:14px;color:#111;">${howFound || '—'}</td>
+                <td style="padding:14px 18px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;width:36%;border-bottom:1px solid #f0f0f0;">How they found you</td>
+                <td style="padding:14px 18px;font-size:14px;color:#111;border-bottom:1px solid #f0f0f0;">${howFound || '—'}</td>
+              </tr>
+              <tr style="background:#fff;">
+                <td style="padding:14px 18px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;width:36%;border-bottom:1px solid #f0f0f0;">Location</td>
+                <td style="padding:14px 18px;font-size:14px;color:#111;border-bottom:1px solid #f0f0f0;">${location}</td>
+              </tr>
+              <tr style="background:#fafafa;">
+                <td style="padding:14px 18px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;width:36%;border-bottom:1px solid #f0f0f0;">IP Address</td>
+                <td style="padding:14px 18px;font-size:14px;color:#111;font-family:monospace;border-bottom:1px solid #f0f0f0;">${ip}</td>
+              </tr>
+              <tr style="background:#fff;">
+                <td style="padding:14px 18px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;width:36%;">Page URL</td>
+                <td style="padding:14px 18px;font-size:14px;color:#111;word-break:break-all;"><a href="${pageUrl || '#'}" style="color:#E8432D;text-decoration:none;">${pageUrl || '—'}</a></td>
               </tr>
             </table>
 

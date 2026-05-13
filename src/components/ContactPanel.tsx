@@ -56,6 +56,7 @@ export default function ContactPanel({ theme = 'light' }: { theme?: 'light' | 'd
       const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'CONTACT' })
       const data = {
         token,
+        pageUrl: window.location.href,
         service: (form.elements.namedItem('service') as HTMLSelectElement).value,
         firstName: (form.elements.namedItem('firstName') as HTMLInputElement).value,
         lastName: (form.elements.namedItem('lastName') as HTMLInputElement).value,
